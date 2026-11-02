@@ -1,0 +1,5 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ post.title }} — Journal KPYX{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{% url 'blog' %}">Journal</a><span>/</span>{{ post.title }}</div><article class="article-page"><div class="section-kicker">LE JOURNAL KPYX · {{ post.published_at|date:'d F Y' }}</div><h1>{{ post.title }}</h1><p class="article-lead">{{ post.excerpt }}</p><div class="article-body">{{ post.body|linebreaks }}</div><a class="text-link" href="{% url 'blog' %}">← Revenir au journal</a></article>
+{% endblock %}

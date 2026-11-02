@@ -1,0 +1,40 @@
+from django.contrib.auth import views as auth_views
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("", views.home, name="home"),
+    path("boutique/", views.shop, name="shop"),
+    path("boutique/<slug:slug>/", views.product_detail, name="product_detail"),
+    path("boutique/<slug:slug>/acheter/", views.buy_product, name="buy_product"),
+    path("panier/", views.cart, name="cart"),
+    path("panier/ajouter/<slug:slug>/", views.cart_add, name="cart_add"),
+    path("panier/modifier/", views.cart_update, name="cart_update"),
+    path("panier/commander/", views.cart_checkout, name="cart_checkout"),
+    path("academy/", views.academy, name="academy"),
+    path("packs/", views.service_packs, name="service_packs"),
+    path("packs/logo/<int:service_id>/", views.service_logo, name="service_logo"),
+    path("academy/<slug:slug>/", views.course_detail, name="course_detail"),
+    path("academy/lecon/<int:lesson_id>/terminer/", views.complete_lesson, name="complete_lesson"),
+    path("academy/lecon/<int:lesson_id>/support/", views.download_lesson_material, name="download_lesson_material"),
+    path("opportunites/", views.opportunities, name="opportunities"),
+    path("a-propos/", views.about, name="about"),
+    path("blog/", views.blog, name="blog"),
+    path("blog/<slug:slug>/", views.blog_detail, name="blog_detail"),
+    path("contact/", views.contact, name="contact"),
+    path("faq/", views.faq, name="faq"),
+    path("inscription/", views.register, name="register"),
+    path("connexion/", auth_views.LoginView.as_view(template_name="registration/login.html", redirect_authenticated_user=True), name="login"),
+    path("deconnexion/", auth_views.LogoutView.as_view(), name="logout"),
+    path("espace/", views.dashboard, name="dashboard"),
+    path("espace/reseau/coordonnees/", views.update_network_sharing, name="update_network_sharing"),
+    path("espace/paiement-inscription/", views.submit_registration_payment, name="submit_registration_payment"),
+    path("espace/portefeuille/", views.wallet, name="wallet"),
+    path("espace/commandes/<int:order_id>/fichiers/<int:item_id>/", views.download_product, name="download_product"),
+    path("espace/notifications/<int:notification_id>/lue/", views.mark_notification_read, name="mark_notification_read"),
+    path("api/v1/produits/", views.api_products, name="api_products"),
+    path("api/v1/me/", views.api_me, name="api_me"),
+    path("api/v1/parrainage/", views.api_referrals, name="api_referrals"),
+    path("api/v1/parrainage/arbre/<int:member_id>/", views.api_referral_tree_children, name="api_referral_tree_children"),
+]

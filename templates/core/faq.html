@@ -1,0 +1,5 @@
+{% extends 'core/base.html' %}
+{% block title %}FAQ — KPYX{% endblock %}
+{% block content %}
+<section class="page-hero faq-hero"><div class="section-kicker">QUESTIONS FRÉQUENTES</div><h1>Des réponses<br><em>sans détour.</em></h1><p>Tout ce qu’il faut savoir pour commencer sur KPYX.</p></section><section class="section faq-list">{% for question,answer in faqs %}<details class="faq-item"><summary><span>{{ forloop.counter|stringformat:'02d' }}</span><strong>{{ question }}</strong><b>+</b></summary><p>{{ answer }}</p></details>{% endfor %}<div class="center-action"><span>Une autre question ?</span><a class="text-link" href="{% url 'contact' %}">Écrivez-nous <span>↗</span></a></div></section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% block title %}Packs numériques — KPYX{% endblock %}
+{% block content %}
+<section class="page-hero service-packs-hero">
+  <div class="section-kicker">DIVERTISSEMENT · MUSIQUE · CONNECTIVITÉ</div>
+  <h1>Vos services, réunis<br><em>à votre façon.</em></h1>
+  <p>Choisissez un service seul, un pack combiné ou la formule Premium. Chaque formule a ses couleurs et regroupe clairement les services inclus.</p>
+  <div class="service-catalog-note" data-pricing-reset="{{ discount_reset_at_ms }}"><span class="service-catalog-mark">✳</span><div><strong>Catalogue en préparation</strong><p>Les tarifs individuels sont ponctuels. Les packs combinés et Premium ont une remise aléatoire de 5 à 15 %, recalculée chaque jour à 00 h 00 ({{ discount_timezone }}). « Obtenir le pack » envoie une demande sans paiement immédiat.</p></div></div>
+</section>
+
+<nav class="service-pack-nav" aria-label="Navigation des packs">
+  <a href="#packs-individuels"><span>01</span>À la carte</a>
+  <a href="#packs-combines"><span>02</span>Offres combinées</a>
+  <a href="#packs-premium"><span>03</span>Premium</a>
+</nav>
+
+<section class="section service-packs-section" id="packs-individuels">
+  <div class="section-heading"><div><div class="section-kicker">À LA CARTE</div><h2>Un service à la fois.</h2></div><p class="section-aside">Choisissez uniquement le service qui vous intéresse.</p></div>
+  <div class="service-pack-grid service-pack-grid-individual">
+    {% for pack in individual_packs %}{% include 'core/_service_pack_card.html' with pack=pack %}{% empty %}<p class="muted">Les offres individuelles seront bientôt ajoutées.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="section service-packs-section service-packs-combos" id="packs-combines">
+  <div class="section-heading"><div><div class="section-kicker">LES FORMULES COMBINÉES</div><h2>Deux ou quatre services.</h2></div><p class="section-aside">Quatre mélanges proposés, à ajuster avec vous.</p></div>
+  <div class="service-pack-grid">
+    {% for pack in bundle_packs %}{% include 'core/_service_pack_card.html' with pack=pack %}{% empty %}<p class="muted">Les formules combinées seront bientôt ajoutées.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="section service-packs-section service-packs-premium-section" id="packs-premium">
+  <div class="service-pack-premium-intro"><div class="section-kicker">LA FORMULE COMPLÈTE</div><h2>Tout l’univers KPYX<br><em>dans un seul pack.</em></h2><p>Une seule formule qui réunit tous les services proposés.</p></div>
+  {% if premium_pack %}{% include 'core/_service_pack_card.html' with pack=premium_pack %}{% else %}<p class="muted">La formule Premium sera bientôt ajoutée.</p>{% endif %}
+</section>
+
+<section class="service-pack-footnote"><strong>Demande sans paiement</strong><p>Les boutons ouvrent un formulaire prérempli pour contacter KPYX au sujet du pack. Les prix des packs contenant le VPN restent à confirmer après le choix du fournisseur. Les modalités et l’autorisation de distribution seront confirmées avant toute souscription. Les identifiants ne sont pas envoyés par ce formulaire.</p><a class="text-link" href="{% url 'contact' %}">Contacter l’équipe KPYX →</a></section>
+{% endblock %}

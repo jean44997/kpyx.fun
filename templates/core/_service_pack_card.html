@@ -1,0 +1,39 @@
+<article class="service-pack-card {% if pack.tier == 'premium' %}service-pack-premium{% endif %}" data-pack="{{ pack.slug }}">
+  <div class="service-pack-top"><span class="service-pack-tier">{{ pack.get_tier_display }}</span><span class="service-pack-period">{% if pack.tier == 'bundle' or pack.tier == 'premium' %}Remise du jour{% elif pack.price_xof %}Paiement unique{% elif pack.slug == 'vpn' %}Selon fournisseur{% else %}Sur demande{% endif %}</span></div>
+  <h3>{{ pack.title }}</h3>
+  <p class="service-pack-summary">{{ pack.summary }}</p>
+  <div class="service-pack-services">
+    {% for service in pack.services.all %}
+    <div class="service-pack-service">
+      {% if service.logo %}<img class="service-pack-logo" src="{% url 'service_logo' service.id %}" alt="Logo {{ service.name }}" loading="lazy">
+      {% else %}<span class="service-logo-placeholder" aria-label="Logo de {{ service.name }} à fournir"><span>LOGO</span><small>À FOURNIR</small></span>{% endif %}
+      <strong>{{ service.name }}</strong>
+      {% if service.compatibility %}<small>{{ service.compatibility }}</small>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% if pack.tier == 'individual' %}
+  <div class="service-pack-price">
+    {% if pack.price_xof %}<strong>{{ pack.price_xof }} FCFA</strong>{% else %}<strong>Tarif à confirmer</strong>{% endif %}
+    {% if pack.price_xof %}<small>Paiement unique</small>
+    {% elif pack.slug == 'vpn' %}<small>Selon le VPN choisi avec l’assistant</small>
+    {% else %}<small>Montant à confirmer</small>{% endif %}
+  </div>
+  {% else %}
+  <div class="service-pack-calculation">
+    <div class="service-pack-calculation-row"><span>{% if pack.variable_services %}Sous-total connu{% else %}Somme des services{% endif %}</span><strong>{{ pack.base_price_xof }} FCFA</strong></div>
+    <div class="service-pack-discount-row"><span>Remise aléatoire du jour</span><strong>−{{ pack.discount_percent }}%</strong></div>
+    {% if pack.variable_services %}
+    <div class="service-pack-calculation-row service-pack-final-row"><span>Prix final après choix du VPN</span><strong>À confirmer</strong></div>
+    <small>Partie connue après remise : {{ pack.discounted_known_services_xof }} FCFA. Le taux s’applique au total, VPN inclus, après le devis de l’assistant.</small>
+    {% else %}
+    <div class="service-pack-calculation-row service-pack-final-row"><span>Prix final aujourd’hui</span><strong>{{ pack.final_price_xof }} FCFA</strong></div>
+    {% endif %}
+    <small>Remise recalculée à 00 h 00 ({{ discount_timezone }}).</small>
+  </div>
+  {% endif %}
+  <a class="service-pack-cta button button-full" href="{% url 'contact' %}?pack={{ pack.slug|urlencode }}#contact-form">
+    Obtenir le pack <span aria-hidden="true">↗</span>
+  </a>
+  <small class="service-pack-cta-note">{% if pack.slug == 'vpn' %}Fournisseur à choisir avec l’assistant WhatsApp{% elif pack.tier == 'bundle' or pack.tier == 'premium' %}Prix valable jusqu’à minuit · demande de confirmation{% elif pack.price_xof %}Demande d’information · paiement unique{% else %}Demande d’information · tarif à confirmer{% endif %}</small>
+</article>
