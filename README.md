@@ -26,3 +26,19 @@ valid SMS-provider credentials before enabling it. Add those credentials in the 
 before turning phone sign-in on. No payment provider or real account inventory is connected
 yet. Never put a Supabase service-role key or raw account passwords in the browser or in
 this repository.
+
+## Payments and account security
+
+Apply the newest SQL migration in `supabase/migrations/` to the hosted Supabase project before enabling wallet requests. Configure these variables only in Vercel Project Settings → Environment Variables:
+
+- `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (sensitive; server-side only)
+- `JEKO_API_KEY` (sensitive; server-side only)
+- `JEKO_API_KEY_ID`
+- `JEKO_STORE_ID`
+- `JEKO_WEBHOOK_SECRET` (sensitive; server-side only)
+
+Set the Jèko webhook URL to `https://<production-domain>/api/jeko/webhook`. Checkout supports Wave, Orange Money, MTN, Moov, and Djamo. Withdrawals are manual and use the 7% fee. A signed Jèko webhook is the only event that credits a deposit.
+
+Rotate any Jèko API key or webhook secret that has been pasted into a chat before placing the replacement in Vercel. Never commit the service-role key, payment credentials, or account passwords. Resale checkout stays disabled until real inventory and a secure delivery vault are connected; the database enforces a 25-customer cap per offer.
