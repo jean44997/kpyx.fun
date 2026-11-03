@@ -20,11 +20,14 @@ export async function requireUser(req) {
 
 export async function db(path, options = {}) {
   if (!SUPABASE_URL || !SERVICE_KEY) throw new Error('Server database is not configured');
+  const authHeaders = { apikey: SERVICE_KEY };
+  // Supabase's new sb_secret_* keys are API keys, not JWTs; sending them as
+  // Bearer tokens makes the gateway reject the request with Invalid JWT.
+  if (!SERVICE_KEY.startsWith('sb_secret_')) authHeaders.Authorization = `Bearer ${SERVICE_KEY}`;
   const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     ...options,
     headers: {
-      apikey: SERVICE_KEY,
-      Authorization: `Bearer ${SERVICE_KEY}`,
+      ...authHeaders,
       'Content-Type': 'application/json',
       ...(options.headers || {}),
     },
