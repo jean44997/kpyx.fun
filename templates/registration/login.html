@@ -1,5 +1,24 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% block title %}Connexion — KPYX{% endblock %}
 {% block content %}
-<section class="auth-layout"><div class="auth-aside"><div class="auth-aside-mark">K<span>.</span></div><div class="section-kicker">VOTRE ESPACE VOUS ATTEND</div><h1>Reprenons là<br>où vous <em>en êtes.</em></h1><p>Connectez-vous pour suivre vos commandes, vos cours et votre progression.</p><div class="auth-aside-foot">Apprendre. Construire. Grandir.</div></div><div class="auth-form-card"><div class="section-kicker">CONNEXION</div><h2>Ravi de vous revoir.</h2><p>Accédez à votre espace KPYX.</p><form method="post" class="form-stack">{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors">Adresse e-mail ou mot de passe incorrect.</div>{% endif %}{% for field in form %}<div class="field-wrap"><label for="{{ field.id_for_label }}">{% if field.name == 'username' %}Adresse e-mail{% else %}{{ field.label }}{% endif %}</label>{{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>{% endfor %}<input type="hidden" name="next" value="{{ next }}"><button class="button button-full" type="submit">Se connecter <span>↗</span></button></form><p class="auth-switch">Nouveau sur KPYX ? <a href="{% url 'register' %}">Créer un compte</a></p></div></section>
+<section class="auth-layout auth-login-layout">
+  <div class="auth-aside auth-photo-panel">
+    <img class="auth-aside-photo" src="{% static 'core/auth-lobby.webp' %}" alt="Espace de travail lumineux" fetchpriority="high">
+    <div class="auth-aside-shade"></div>
+    <a class="auth-aside-brand" href="{% url 'home' %}" aria-label="KPYX accueil"><span class="brand-mark">K</span><span>KPYX<span class="brand-period">.</span><small>LEARN · BUILD · GROW</small></span></a>
+    <div class="auth-aside-copy"><span class="section-kicker">APPRENDRE · CONSTRUIRE · GRANDIR</span><h1>Reprenons là<br>où vous <em>en êtes.</em></h1><p>Retrouvez votre espace, vos formations et l’avancement de vos projets.</p></div>
+    <div class="auth-aside-foot">Un espace KPYX, conçu pour aller plus loin.</div>
+  </div>
+  <div class="auth-form-card">
+    <div class="section-kicker">ESPACE KPYX</div><h2>Bon retour.</h2><p>Connectez-vous à votre compte KPYX.</p>
+    <form method="post" class="form-stack" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors" role="alert">Adresse e-mail ou mot de passe incorrect.</div>{% endif %}
+      <div class="field-wrap"><label for="{{ form.username.id_for_label }}">Adresse e-mail</label>{{ form.username }}{% for error in form.username.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>
+      <div class="field-wrap"><div class="field-label-row"><label for="{{ form.password.id_for_label }}">Mot de passe</label><a class="auth-forgot-link" href="{% url 'password_reset' %}">Mot de passe oublié ?</a></div>{{ form.password }}{% for error in form.password.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>
+      <input type="hidden" name="next" value="{{ next }}"><button class="button button-full" type="submit">Se connecter <span>↗</span></button>
+    </form>
+    <p class="auth-switch">Pas encore de compte ? <a href="{% url 'register' %}">Créer un compte</a></p>
+  </div>
+</section>
 {% endblock %}

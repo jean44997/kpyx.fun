@@ -82,7 +82,9 @@ def verify_payment(submission_id, reviewer):
             raise ValidationError("Le statut du compte ne permet pas cette validation.")
         member.status = Member.Status.VALIDATED
         member.save(update_fields=["status"])
-        Notification.objects.create(member=member, title="Compte validé", body="Votre paiement a été confirmé et votre compte KPYX est actif.")
+        if not WalletEntry.objects.filter(member=member, kind=WalletEntry.Kind.BONUS).exists():
+            WalletEntry.objects.create(member=member, kind=WalletEntry.Kind.BONUS, amount=500, description="Bonus de bienvenue KPYX · 500 FCFA")
+        Notification.objects.create(member=member, title="Compte validé", body="Votre paiement a été confirmé. Votre compte KPYX est actif et votre bonus de bienvenue de 500 FCFA a été crédité.")
     elif payment.purpose == PaymentSubmission.Purpose.ORDER:
         order = Order.objects.select_for_update().get(pk=payment.order_id)
         if order.status != Order.Status.PAYMENT_REVIEW or payment.amount != order.total:

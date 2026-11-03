@@ -105,3 +105,7 @@ python manage.py test
 ```
 
 Les tests couvrent les pages publiques et le tableau de bord, la non-activation sur simple déclaration, le blocage d’une seconde déclaration, les commissions sur commandes confirmées, l’absence de double génération, le pourcentage de base et le plafond, le retrait après approbation, l’annulation des commissions après remboursement référencé, l’authentification de l’API, le panier calculé côté serveur, l’arbre limité au 100ᵉ niveau et le partage optionnel des coordonnées.
+
+## Compte KPYX
+
+Les formulaires d’inscription acceptent les indicatifs ouest-africains avec leurs drapeaux; le numéro est stocké avec l’indicatif sélectionné. Le bonus de bienvenue de 500 FCFA est crédité une seule fois après vérification effective du paiement d’activation. Le lien « Mot de passe oublié » utilise le flux sécurisé de réinitialisation Django. Pour envoyer les e-mails en production, renseigner les variables SMTP `DJANGO_EMAIL_*` dans l’environnement du serveur; elles ne doivent pas être enregistrées dans Git.

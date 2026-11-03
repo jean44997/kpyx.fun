@@ -4,11 +4,37 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import ContactMessage, Member, PaymentChannel, SiteSettings, WithdrawalRequest
 
 
+COUNTRY_CODES = (
+    ("+225", "🇨🇮  +225  ·  Côte d’Ivoire"),
+    ("+221", "🇸🇳  +221  ·  Sénégal"),
+    ("+223", "🇲🇱  +223  ·  Mali"),
+    ("+226", "🇧🇫  +226  ·  Burkina Faso"),
+    ("+227", "🇳🇪  +227  ·  Niger"),
+    ("+228", "🇹🇬  +228  ·  Togo"),
+    ("+229", "🇧🇯  +229  ·  Bénin"),
+    ("+224", "🇬🇳  +224  ·  Guinée"),
+    ("+237", "🇨🇲  +237  ·  Cameroun"),
+    ("+233", "🇬🇭  +233  ·  Ghana"),
+    ("+234", "🇳🇬  +234  ·  Nigeria"),
+)
+
+
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(label="Prénom", max_length=150)
     last_name = forms.CharField(label="Nom", max_length=150)
     email = forms.EmailField(label="Adresse e-mail")
-    phone = forms.CharField(label="Téléphone", max_length=32)
+    phone_country = forms.ChoiceField(
+        label="Indicatif du pays",
+        choices=COUNTRY_CODES,
+        required=False,
+        initial="+225",
+        widget=forms.Select(attrs={"class": "phone-country-code", "aria-label": "Indicatif du pays"}),
+    )
+    phone = forms.CharField(
+        label="Téléphone",
+        max_length=24,
+        widget=forms.TelInput(attrs={"class": "phone-local-number", "inputmode": "tel", "autocomplete": "tel-national", "placeholder": "07 00 00 00 00"}),
+    )
     referral = forms.CharField(label="Code de parrainage", max_length=20, required=False)
     share_contact_with_network = forms.BooleanField(
         label="Partager mon e-mail et mon téléphone avec les membres de mon réseau de parrainage",
@@ -17,7 +43,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = Member
-        fields = ("first_name", "last_name", "email", "phone", "referral", "share_contact_with_network")
+        fields = ("first_name", "last_name", "email", "phone_country", "phone", "referral", "share_contact_with_network")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,6 +56,17 @@ class RegisterForm(UserCreationForm):
         if Member.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("Un compte existe déjà avec cette adresse e-mail.")
         return email
+
+    def clean_phone_country(self):
+        return self.cleaned_data.get("phone_country") or "+225"
+
+    def clean_phone(self):
+        import re
+
+        phone = re.sub(r"\D", "", self.cleaned_data["phone"])
+        if not 6 <= len(phone) <= 15:
+            raise forms.ValidationError("Saisissez un numéro valide, entre 6 et 15 chiffres.")
+        return phone
 
     def clean_referral(self):
         code = self.cleaned_data.get("referral", "").strip().upper()
@@ -45,7 +82,7 @@ class RegisterForm(UserCreationForm):
         member.email = self.cleaned_data["email"]
         member.first_name = self.cleaned_data["first_name"].strip()
         member.last_name = self.cleaned_data["last_name"].strip()
-        member.phone = self.cleaned_data["phone"].strip()
+        member.phone = f"{self.cleaned_data.get('phone_country') or '+225'} {self.cleaned_data['phone']}"
         member.referred_by = self.cleaned_data.get("referral")
         member.share_contact_with_network = self.cleaned_data.get("share_contact_with_network", False)
         member.status = Member.Status.PENDING

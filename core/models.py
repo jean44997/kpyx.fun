@@ -360,6 +360,7 @@ class Commission(models.Model):
 
 class WalletEntry(models.Model):
     class Kind(models.TextChoices):
+        BONUS = "bonus", "Bonus de bienvenue"
         COMMISSION = "commission", "Commission libérée"
         WITHDRAWAL = "withdrawal", "Retrait"
         ADJUSTMENT = "adjustment", "Ajustement administrateur"
