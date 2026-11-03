@@ -204,3 +204,36 @@ img,svg,video{max-width:100%}
   .auth-terms{padding:10px 11px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* Larger, clearer mobile type and keyboard-aware layout */
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.55;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.55}
+@media(max-width:760px){
+  body{font-size:16px;line-height:1.58}
+  .content{font-size:16px;line-height:1.58}
+  .content :is(p,small,label,button,[class*="hint"],[class*="note"],[class*="caption"]){font-size:max(14px,1em);line-height:1.5}
+  .content p,.page-head>div>p,.auth-card-heading .sub,.resale-store-header p,.resale-onboarding-copy p,.digital-resale-onboarding p{font-size:15px;line-height:1.65}
+  .eyebrow,.section-count,.topbar .brand span,.mobile-nav small,.nav-section-title{font-size:11px;line-height:1.4}
+  .field label,.wallet-input-heading label,.wallet-section-title,.form-label{font-size:15px;line-height:1.45}
+  .auth-options label,.auth-options .text-button,.auth-footline,.auth-terms,.wallet-note,.digital-access-note,.forgot-steps p,.payment-method small{font-size:14px;line-height:1.6}
+  .wallet-note>b,.forgot-steps h3{font-size:16px;line-height:1.4}
+  .payment-method{min-height:62px}
+  .button,.chip,.quick-link,.balance-actions>.button{font-size:15px;line-height:1.4}
+  .input,select.input,textarea.input,input.input,select,textarea,
+  input:not([type=checkbox]):not([type=radio]){font-size:16px!important;line-height:1.45!important;scroll-margin-block:18px}
+  .input{min-height:52px}
+  .field{margin-top:19px}
+  .auth-terms,.wallet-note,.digital-access-note,.forgot-steps{padding:14px 15px}
+  .bundle-pack-prices>div,.digital-card-price,.bundle-quantity{font-size:14px;line-height:1.5}
+  .bundle-pack-prices b,.bundle-pack-prices strong{font-size:15px}
+  body.keyboard-open .topbar,body.keyboard-open .mobile-nav{display:none!important}
+  body.keyboard-open .auth-main .auth-photo{display:none}
+  body.keyboard-open .content{padding-top:12px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+  body.keyboard-open .auth-main{min-height:0;padding-top:10px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+  body.keyboard-open .auth-main .auth-card{margin-block:0}
+  body.keyboard-open .shell{min-height:var(--visible-viewport-height,100dvh)}
+}
+@media(max-width:380px){
+  .content p,.page-head>div>p,.auth-card-heading .sub{font-size:14px;line-height:1.6}
+  .eyebrow,.section-count,.mobile-nav small{font-size:10px}
+}
