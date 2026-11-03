@@ -1,5 +1,5 @@
-const CACHE='kpyx-shell-v8';
-const CORE=['/','/index.html','/app.js?v=pwa-20261103-contact-whatsapp','/style.css?v=pwa-20261103-contact-whatsapp-layout','/manifest.webmanifest','/assets/kpyx-favicon.svg','/assets/kpyx-180.png','/assets/kpyx-192.png','/assets/kpyx-512.png','/assets/whatsapp.svg','/assets/telegram.svg'];
+const CACHE='kpyx-shell-v9';
+const CORE=['/','/index.html','/app.js?v=pwa-20261103-payment-labels','/style.css?v=pwa-20261103-payment-labels-layout','/manifest.webmanifest','/assets/kpyx-favicon.svg','/assets/kpyx-180.png','/assets/kpyx-192.png','/assets/kpyx-512.png','/assets/whatsapp.svg','/assets/telegram.svg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
