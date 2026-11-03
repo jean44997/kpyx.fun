@@ -50,7 +50,7 @@ as $$
 declare uid uuid:=p_user_id; fee bigint; rid uuid:=gen_random_uuid(); balance bigint; txid uuid;
 begin
  if uid is null then raise exception 'authentication_required'; end if;
- if p_amount_xof<1200 or p_amount_xof>1000000 or mod(p_amount_xof,100)<>0 then raise exception 'invalid_amount'; end if;
+ if p_amount_xof<1200 or mod(p_amount_xof,100)<>0 then raise exception 'invalid_amount'; end if;
  if p_method not in ('wave','orange','mtn','moov','djamo') or length(trim(p_destination))<6 or length(p_destination)>80 then raise exception 'invalid_destination'; end if;
  if exists(select 1 from public.withdrawal_requests where user_id=uid and status in ('pending','processing')) then raise exception 'withdrawal_already_pending'; end if;
  fee:=round(p_amount_xof*0.07);

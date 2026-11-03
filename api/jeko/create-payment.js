@@ -9,17 +9,14 @@ export default async function handler(req, res) {
     if (!user) return json(res, 401, { error: 'Connectez-vous pour recharger votre compte.' });
     const amount = Number(req.body?.amount);
     const method = String(req.body?.paymentMethod || '').toLowerCase();
-    if (!Number.isSafeInteger(amount) || amount < 3000 || amount > 1000000 || amount % 100 !== 0) {
-      return json(res, 400, { error: 'Le montant doit être compris entre 3 000 et 1 000 000 FCFA.' });
+    if (!Number.isSafeInteger(amount) || amount < 3000 || amount > Math.floor(Number.MAX_SAFE_INTEGER / 100) || amount % 100 !== 0) {
+      return json(res, 400, { error: 'Le montant minimum est de 3 000 FCFA ; saisissez un montant valide.' });
     }
     if (!METHODS.has(method)) return json(res, 400, { error: 'Moyen de paiement non accepté.' });
     const key = process.env.JEKO_API_KEY;
     const keyId = process.env.JEKO_API_KEY_ID;
     const storeId = process.env.JEKO_STORE_ID;
     if (!key || !keyId || !storeId) return json(res, 503, { error: 'Le paiement en ligne est en cours de configuration.' });
-
-    const recent = await db(`payment_events?select=id&user_id=eq.${encodeURIComponent(user.id)}&event_type=eq.topup&status=eq.pending&created_at=gte.${encodeURIComponent(new Date(Date.now() - 10 * 60 * 1000).toISOString())}`);
-    if (recent.length >= 3) return json(res, 429, { error: 'Trop de paiements en attente. Réessayez dans quelques minutes.' });
 
     const reference = `KPYX-${crypto.randomUUID()}`;
     await db('payment_events', {
