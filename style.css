@@ -265,3 +265,17 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ar
 .auth-card .username-hint[data-state=available]{color:#287548}
 .auth-card .username-hint[data-state=taken],.auth-card .username-hint[data-state=invalid]{color:#b54233}
 @media(max-width:560px){.profile-name-grid{grid-template-columns:1fr;gap:0}.profile-edit-card{padding:17px}.profile-edit-brand{margin-bottom:17px}.profile-photo-preview{width:76px;height:76px}}
+
+/* Clear, evenly spaced official contact links */
+.forgot-channels{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+.forgot-channels .button{width:100%;height:auto;min-height:50px;margin:0;padding:11px 16px;display:flex;align-items:center;justify-content:flex-start;gap:12px;font-size:14px;line-height:1.25;text-align:left}
+.forgot-channels img{width:25px;height:25px;flex:0 0 25px}
+.support-channel-cards{display:grid;grid-template-columns:1fr;gap:10px;margin:16px 0 22px}
+.support-channel-cards>a{width:100%;min-height:72px;padding:12px 15px;gap:12px;border:1px solid rgba(27,26,23,.09);border-radius:16px;box-shadow:0 5px 18px rgba(40,32,22,.05);transition:transform .2s,box-shadow .2s,border-color .2s}
+.support-channel-cards>a:hover,.support-channel-cards>a:focus-visible{transform:translateY(-2px);border-color:rgba(232,86,42,.32);box-shadow:0 10px 25px rgba(40,32,22,.09);outline:none}
+.support-channel-cards>a img{width:42px;height:42px;flex:0 0 42px}
+.support-channel-cards>a span{gap:5px}
+.support-channel-cards>a strong{font-size:14px;line-height:1.2}
+.support-channel-cards>a small{font-size:11px;line-height:1.3}
+.support-channel-cards>a b{margin-left:auto;font-size:18px;color:var(--muted)}
+@media(min-width:760px){.support-channel-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
