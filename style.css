@@ -237,3 +237,31 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ar
   .content p,.page-head>div>p,.auth-card-heading .sub{font-size:14px;line-height:1.6}
   .eyebrow,.section-count,.mobile-nav small{font-size:10px}
 }
+
+/* Account identity, username availability and profile photo controls */
+.account-avatar.profile-avatar{overflow:hidden;display:grid;place-items:center;background:#080b09}
+.profile-avatar img,.profile-photo-preview{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.profile-edit-card{max-width:720px;padding:clamp(18px,4vw,28px)}
+.profile-edit-brand{display:flex;align-items:center;gap:12px;margin-bottom:23px;padding-bottom:17px;border-bottom:1px solid var(--line)}
+.profile-edit-brand>img{width:48px;height:48px;border-radius:13px}
+.profile-edit-brand>div{display:grid;gap:2px}
+.profile-edit-brand strong{font-size:18px;letter-spacing:.02em}
+.profile-edit-brand span{color:var(--muted);font-size:11px;letter-spacing:.1em}
+.profile-photo-control{display:flex;align-items:center;gap:16px;margin:0 0 19px}
+.profile-photo-preview{width:88px;height:88px;flex:none;border:3px solid #fff;background:#080b09;box-shadow:0 4px 16px rgba(27,26,23,.12)}
+.profile-photo-control>div{display:grid;justify-items:start;gap:8px}
+.profile-photo-button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 16px;cursor:pointer}
+.profile-photo-control small,.username-hint{font-size:13px;line-height:1.5;color:#6e675d}
+.profile-name-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.profile-edit-form .field{min-width:0;margin-top:15px}
+.profile-edit-form .input{min-width:0;width:100%}
+.username-hint[data-state=available]{color:#287548}
+.username-hint[data-state=taken],.username-hint[data-state=invalid]{color:#b54233}
+.username-hint[data-state=checking]{color:#8a6b31}
+.profile-username-rule{margin:18px 0;padding:15px 16px}
+.profile-save{width:100%;min-height:50px;margin-top:18px}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.auth-card .username-hint{display:block;margin-top:7px}
+.auth-card .username-hint[data-state=available]{color:#287548}
+.auth-card .username-hint[data-state=taken],.auth-card .username-hint[data-state=invalid]{color:#b54233}
+@media(max-width:560px){.profile-name-grid{grid-template-columns:1fr;gap:0}.profile-edit-card{padding:17px}.profile-edit-brand{margin-bottom:17px}.profile-photo-preview{width:76px;height:76px}}
