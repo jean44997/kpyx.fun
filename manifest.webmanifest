@@ -1,1 +1,17 @@
-{"name":"KPYX","short_name":"KPYX","description":"Espace membre KPYX","start_url":"/login","scope":"/","display":"standalone","background_color":"#f2efe9","theme_color":"#1b1a17","icons":[{"src":"/assets/kpyx-favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "id": "/",
+  "name": "KPYX — Espace membre",
+  "short_name": "KPYX",
+  "description": "Espace membre KPYX : communauté et services.",
+  "start_url": "/login?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#080b09",
+  "theme_color": "#080b09",
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "/assets/kpyx-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/kpyx-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/assets/kpyx-favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -3,20 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#f2efe9" />
+  <meta name="theme-color" content="#080b09" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="KPYX" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <base href="/" />
   <title>KPYX — travailler · échanger · grandir</title>
-  <link rel="icon" type="image/svg+xml" href="./assets/kpyx-favicon.svg?v=profile-20261103" />
-  <link rel="apple-touch-icon" href="./assets/favicon.png?v=profile-20261103" />
-  <link rel="stylesheet" href="./style.css?v=profile-20261103" />
+  <link rel="icon" type="image/svg+xml" href="/assets/kpyx-favicon.svg?v=pwa-20261103" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/kpyx-180.png?v=pwa-20261103" />
+  <link rel="stylesheet" href="./style.css?v=pwa-20261103" />
 </head>
 <body>
   <div id="app"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="./app.js?v=profile-20261103"></script>
+  <script src="./app.js?v=pwa-20261103"></script>
   <script type="module" src="./supabase/client.js?v=supabase-v1"></script>
   <script>if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));</script>
 </body>
