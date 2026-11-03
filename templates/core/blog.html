@@ -1,6 +1,0 @@
-{% extends 'core/base.html' %}
-{% block title %}Journal KPYX — idées et ressources{% endblock %}
-{% block content %}
-<section class="page-hero"><div class="section-kicker">LE JOURNAL KPYX</div><h1>Des idées à garder.<br><em>Des pistes à explorer.</em></h1><p>Conseils, actualités et réflexions autour du trading, du commerce en ligne et de l’apprentissage.</p></section>
-<section class="section blog-section">{% if posts %}<div class="blog-grid">{% for post in posts %}<a class="blog-card" href="{% url 'blog_detail' post.slug %}"><div class="blog-card-image"><span>JOURNAL / {{ forloop.counter|stringformat:'02d' }}</span><b>K<span>.</span></b></div><div class="blog-card-body"><span class="blog-date">{{ post.published_at|date:'d F Y' }}</span><h2>{{ post.title }}</h2><p>{{ post.excerpt }}</p><span class="text-link">Lire l’article <span>↗</span></span></div></a>{% endfor %}</div>{% else %}<div class="empty-catalog"><div class="empty-orbit">✳</div><div><strong>Le journal s’écrit en coulisses.</strong><p>Nos premiers articles seront publiés ici prochainement.</p></div><a class="text-link" href="{% url 'contact' %}">Échanger avec nous <span>→</span></a></div>{% endif %}</section>
-{% endblock %}
