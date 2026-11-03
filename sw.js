@@ -1,5 +1,5 @@
-const CACHE='kpyx-shell-v3';
-const CORE=['/','/index.html','/app.js?v=pwa-20261103','/style.css?v=pwa-20261103','/manifest.webmanifest','/assets/kpyx-favicon.svg','/assets/kpyx-180.png','/assets/kpyx-192.png','/assets/kpyx-512.png'];
+const CACHE='kpyx-shell-v4';
+const CORE=['/','/index.html','/app.js?v=pwa-20261103-contact-links','/style.css?v=pwa-20261103-contact-links','/manifest.webmanifest','/assets/kpyx-favicon.svg','/assets/kpyx-180.png','/assets/kpyx-192.png','/assets/kpyx-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
