@@ -19,13 +19,13 @@ The initial schema and seed data are in `supabase/migrations/`. Apply future cha
 migrations; do not edit already-applied migrations. Customer-facing tables use RLS, while
 payment confirmation and access fulfillment are reserved for trusted server-side code.
 
-The interface uses Supabase Auth and reads the catalog from Supabase. Phone and email
-confirmations are disabled in the local Supabase configuration. On the hosted project,
-email confirmation is disabled; phone sign-in remains disabled because Supabase requires
-valid SMS-provider credentials before enabling it. Add those credentials in the dashboard
-before turning phone sign-in on. No payment provider or real account inventory is connected
-yet. Never put a Supabase service-role key or raw account passwords in the browser or in
-this repository.
+The interface uses Supabase Auth and reads the catalog from Supabase. Phone + password
+sign-in is backed by a deterministic non-routable email alias derived from the normalized
+phone number, so the UI still uses phone numbers without sending SMS. Enable Supabase Email
+Auth with email confirmations disabled on the hosted project; keep Phone Auth disabled unless
+an SMS provider is configured. Phone ownership is not verified, so the user-provided number
+is only a login identifier. Never put a Supabase service-role key or raw account passwords in
+the browser or in this repository.
 
 ## Payments and account security
 
