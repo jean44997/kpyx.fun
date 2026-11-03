@@ -1,0 +1,24 @@
+project_id = "vxjxgehyyzwxxqbstalx"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+major_version = 17
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:4174"
+additional_redirect_urls = ["http://localhost:4174"]
+enable_signup = true
+
+[auth.email]
+enable_signup = false
+enable_confirmations = false
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = false
