@@ -44,19 +44,21 @@ async function sendPush(userIds: string[], title: string, body: string) {
 }
 
 async function notifyOne(userId: string, title: string, body: string) {
-  const { error } = await supabase.from('notifications').insert({ user_id: userId, title: title.slice(0, 80), body: body.slice(0, MAX_TEXT), kind: 'account' });
+  const adminBatchId = crypto.randomUUID();
+  const { error } = await supabase.from('notifications').insert({ user_id: userId, title: title.slice(0, 80), body: body.slice(0, MAX_TEXT), kind: 'account', admin_batch_id: adminBatchId });
   if (error) throw error;
-  return sendPush([userId], title, body);
+  return { adminBatchId, push: await sendPush([userId], title, body) };
 }
 
 async function broadcast(body: string) {
+  const adminBatchId = crypto.randomUUID();
   let offset = 0, total = 0, pushDelivered = 0, pushFailed = false;
   for (;;) {
     const { data: users, error } = await supabase.from('profiles').select('id').order('id').range(offset, offset + 499);
     if (error) throw error;
     if (!users?.length) break;
     for (let i = 0; i < users.length; i += 100) {
-      const rows = users.slice(i, i + 100).map(({ id }) => ({ user_id: id, title: 'Annonce KPYX', body: body.slice(0, MAX_TEXT), kind: 'account' }));
+      const rows = users.slice(i, i + 100).map(({ id }) => ({ user_id: id, title: 'Annonce KPYX', body: body.slice(0, MAX_TEXT), kind: 'account', admin_batch_id: adminBatchId }));
       const { error: insertError } = await supabase.from('notifications').insert(rows);
       if (insertError) throw insertError;
       total += rows.length;
@@ -68,7 +70,7 @@ async function broadcast(body: string) {
     offset += 500;
     if (offset >= 50000) throw new Error('Broadcast recipient safety limit reached');
   }
-  return { total, pushDelivered, pushFailed };
+  return { total, pushDelivered, pushFailed, adminBatchId };
 }
 
 Deno.serve(async (req: Request) => {
@@ -100,7 +102,7 @@ Deno.serve(async (req: Request) => {
     const command = (input.match(/^\/[a-z_]+(?:@\w+)?/i)?.[0] || '').replace(/@\w+$/, '').toLowerCase();
     const rest = input.replace(/^\/[^\s]+\s*/i, '').trim();
     if (command === '/start' || command === '/help') {
-      await reply(botToken, chatId, 'Commandes admin KPYX:\n/code <montant> <utilisations> [CODE]\n/send <UUID utilisateur> <message>\n/all <message> (tous les comptes)\n/broadcast <message> (alias)');
+      await reply(botToken, chatId, 'Commandes admin KPYX:\n/code <montant> <utilisations> [CODE]\n/send <UUID utilisateur> <message>\n/all <message> (tous les comptes)\n/delete <ID notification> (retire une notification / annonce du site)');
     } else if (command === '/code') {
       const [amountText, usesText, requestedCode] = rest.split(/\s+/);
       const amount = Number(amountText), uses = Number(usesText);
@@ -121,15 +123,24 @@ Deno.serve(async (req: Request) => {
         if (error) throw error;
         if (!user) await reply(botToken, chatId, 'Utilisateur introuvable. Utilise son UUID de profil.');
         else {
-          const push = await notifyOne(user.id, 'Message de KPYX', match[2].trim());
-          await reply(botToken, chatId, push.failed ? 'Notification ajoutée à la boîte KPYX ; la livraison Push serveur a échoué.' : `Notification enregistrée. Push envoyé à ${push.delivered} appareil(s).`);
+          const result = await notifyOne(user.id, 'Message de KPYX', match[2].trim());
+          await reply(botToken, chatId, `${result.push.failed ? 'Notification ajoutée à la boîte KPYX ; la livraison Push serveur a échoué.' : `Notification enregistrée. Push envoyé à ${result.push.delivered} appareil(s).`}\nID à utiliser avec /delete : ${result.adminBatchId}`);
         }
       }
     } else if (command === '/all' || command === '/broadcast') {
       if (!rest || rest.length > MAX_TEXT) await reply(botToken, chatId, 'Format : /all <message> (900 caractères maximum).' );
       else {
         const result = await broadcast(rest);
-        await reply(botToken, chatId, `Notification enregistrée pour ${result.total} compte(s). Push envoyé à ${result.pushDelivered} appareil(s).${result.pushFailed ? '\nCertains envois Push ont échoué ; la notification reste dans la boîte KPYX.' : ''}`);
+        await reply(botToken, chatId, `Notification enregistrée pour ${result.total} compte(s). Push envoyé à ${result.pushDelivered} appareil(s).${result.pushFailed ? '\nCertains envois Push ont échoué ; la notification reste dans la boîte KPYX.' : ''}\nID à utiliser avec /delete : ${result.adminBatchId}`);
+      }
+    } else if (command === '/delete') {
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(rest)) {
+        await reply(botToken, chatId, 'Format : /delete <ID notification>. Utilise l’ID donné après /send ou /all.');
+      } else {
+        const { data, error } = await supabase.from('notifications').delete().eq('admin_batch_id', rest).select('id');
+        if (error) throw error;
+        const deleted = data?.length || 0;
+        await reply(botToken, chatId, deleted ? `${deleted} notification(s) supprimée(s) de la boîte KPYX.` : 'Aucune notification trouvée pour cet ID ; elle a peut-être déjà été supprimée.');
       }
     } else {
       await reply(botToken, chatId, 'Commande inconnue. Envoie /help pour voir les commandes.');

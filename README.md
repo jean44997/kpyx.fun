@@ -45,7 +45,7 @@ Set the Jèko webhook URL to `https://<production-domain>/api/jeko/webhook`. Che
 
 Apply `supabase/migrations/20261105120000_attendance_gifts_telegram_admin.sql` to the Supabase project. Attendance is credited atomically once per Abidjan calendar day (100 XOF); gift codes are redeemed atomically, each account can redeem a code once, and each code enforces its configured use limit.
 
-The bot is deployed as Supabase Edge Function `kpyx-telegram-admin`; its token, admin chat ID, and generated webhook secret are stored in Supabase Function Secrets. The Telegram webhook points to `https://vxjxgehyyzwxxqbstalx.supabase.co/functions/v1/kpyx-telegram-admin`. Never put bot credentials in browser code or Git. The bot accepts `/code <amount> <uses> [CODE]`, `/send <profile-UUID> <message>`, and `/broadcast <message>` only from the configured admin chat. `/send` and `/broadcast` create in-app notifications, delivered live to signed-in users.
+The bot is deployed as Supabase Edge Function `kpyx-telegram-admin`; its token, admin chat ID, and generated webhook secret are stored in Supabase Function Secrets. The Telegram webhook points to `https://vxjxgehyyzwxxqbstalx.supabase.co/functions/v1/kpyx-telegram-admin`. Never put bot credentials in browser code or Git. The bot accepts `/code <amount> <uses> [CODE]`, `/send <profile-UUID> <message>`, `/all <message>`, and `/delete <notification-ID>` only from the configured admin sender. `/send` and `/all` create in-app notifications and reply with an ID; `/delete` removes every inbox copy associated with that bot message, without touching payment or withdrawal alerts. Apply `supabase/migrations/20261107100000_telegram_notification_delete.sql` before deploying the updated function.
 
 ### Web Push
 
