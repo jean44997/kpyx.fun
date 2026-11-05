@@ -76,7 +76,7 @@ Deno.serve(async (req: Request) => {
     const command = (input.match(/^\/[a-z_]+(?:@\w+)?/i)?.[0] || '').replace(/@\w+$/, '').toLowerCase();
     const rest = input.replace(/^\/[^\s]+\s*/i, '').trim();
     if (command === '/start' || command === '/help') {
-      await reply(botToken, chatId, 'Commandes admin KPYX:\n/code <montant> <utilisations> [CODE]\n/send <UUID utilisateur> <message>\n/broadcast <message>');
+      await reply(botToken, chatId, 'Commandes admin KPYX:\n/code <montant> <utilisations> [CODE]\n/send <UUID utilisateur> <message>\n/all <message> (tous les comptes)\n/broadcast <message> (alias)');
     } else if (command === '/code') {
       const [amountText, usesText, requestedCode] = rest.split(/\s+/);
       const amount = Number(amountText), uses = Number(usesText);
@@ -98,8 +98,8 @@ Deno.serve(async (req: Request) => {
         if (!user) await reply(botToken, chatId, 'Utilisateur introuvable. Utilise son UUID de profil.');
         else { await notifyOne(user.id, 'Message de KPYX', match[2].trim()); await reply(botToken, chatId, 'Notification envoyée dans le site.'); }
       }
-    } else if (command === '/broadcast') {
-      if (!rest || rest.length > MAX_TEXT) await reply(botToken, chatId, 'Format : /broadcast <message> (900 caractères maximum).');
+    } else if (command === '/all' || command === '/broadcast') {
+      if (!rest || rest.length > MAX_TEXT) await reply(botToken, chatId, 'Format : /all <message> (900 caractères maximum).' );
       else { const count = await broadcast(rest); await reply(botToken, chatId, `Notification envoyée à ${count} compte(s).`); }
     } else {
       await reply(botToken, chatId, 'Commande inconnue. Envoie /help pour voir les commandes.');
