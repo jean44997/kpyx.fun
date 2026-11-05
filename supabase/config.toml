@@ -22,3 +22,6 @@ enable_confirmations = false
 [auth.sms]
 enable_signup = false
 enable_confirmations = false
+
+[functions.kpyx-telegram-admin]
+verify_jwt = false

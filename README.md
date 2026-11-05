@@ -45,12 +45,6 @@ Set the Jèko webhook URL to `https://<production-domain>/api/jeko/webhook`. Che
 
 Apply `supabase/migrations/20261105120000_attendance_gifts_telegram_admin.sql` to the Supabase project. Attendance is credited atomically once per Abidjan calendar day (100 XOF); gift codes are redeemed atomically, each account can redeem a code once, and each code enforces its configured use limit.
 
-Configure these server-side Vercel environment variables after creating a **new** bot token in BotFather:
-
-- `TELEGRAM_BOT_TOKEN` (secret; never put it in browser code or Git)
-- `TELEGRAM_ADMIN_CHAT_ID` (private admin chat ID)
-- `TELEGRAM_WEBHOOK_SECRET` (random secret, at least 32 characters)
-
-Webhook endpoint: `https://<production-domain>/api/telegram/webhook`. Register it with Telegram's `setWebhook`, passing that endpoint and the same `TELEGRAM_WEBHOOK_SECRET` as `secret_token`. The bot accepts `/code <amount> <uses> [CODE]`, `/send <profile-UUID> <message>`, and `/broadcast <message>` only from the configured admin chat. `/send` and `/broadcast` create in-app notifications, delivered live to signed-in users.
+The bot is deployed as Supabase Edge Function `kpyx-telegram-admin`; its token, admin chat ID, and generated webhook secret are stored in Supabase Function Secrets. The Telegram webhook points to `https://vxjxgehyyzwxxqbstalx.supabase.co/functions/v1/kpyx-telegram-admin`. Never put bot credentials in browser code or Git. The bot accepts `/code <amount> <uses> [CODE]`, `/send <profile-UUID> <message>`, and `/broadcast <message>` only from the configured admin chat. `/send` and `/broadcast` create in-app notifications, delivered live to signed-in users.
 
 Rotate any Jèko API key or webhook secret that has been pasted into a chat before placing the replacement in Vercel. Never commit the service-role key, payment credentials, or account passwords. Resale checkout stays disabled until real inventory and a secure delivery vault are connected; the database enforces a 25-customer cap per offer.
