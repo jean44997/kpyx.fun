@@ -47,4 +47,8 @@ Apply `supabase/migrations/20261105120000_attendance_gifts_telegram_admin.sql` t
 
 The bot is deployed as Supabase Edge Function `kpyx-telegram-admin`; its token, admin chat ID, and generated webhook secret are stored in Supabase Function Secrets. The Telegram webhook points to `https://vxjxgehyyzwxxqbstalx.supabase.co/functions/v1/kpyx-telegram-admin`. Never put bot credentials in browser code or Git. The bot accepts `/code <amount> <uses> [CODE]`, `/send <profile-UUID> <message>`, and `/broadcast <message>` only from the configured admin chat. `/send` and `/broadcast` create in-app notifications, delivered live to signed-in users.
 
+### Web Push
+
+Apply `supabase/migrations/20261106100000_web_push_subscriptions.sql`. Vercel server secrets: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT=https://kpyx.fun`, and `PUSH_DELIVERY_SECRET`. Supabase Edge Function secrets: `PUSH_DELIVERY_URL=https://kpyx.fun/api/push/send` and the same `PUSH_DELIVERY_SECRET`. VAPID private key and delivery secret must never be committed. The PWA stores subscriptions per authenticated user; `/send` and `/all` dispatch notifications to those registered devices.
+
 Rotate any Jèko API key or webhook secret that has been pasted into a chat before placing the replacement in Vercel. Never commit the service-role key, payment credentials, or account passwords. Resale checkout stays disabled until real inventory and a secure delivery vault are connected; the database enforces a 25-customer cap per offer.

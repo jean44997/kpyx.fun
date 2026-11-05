@@ -25,13 +25,32 @@ async function reply(token: string, chatId: number, text: string) {
   await telegram(token, 'sendMessage', { chat_id: chatId, text, disable_web_page_preview: true });
 }
 
+async function sendPush(userIds: string[], title: string, body: string) {
+  const url = Deno.env.get('PUSH_DELIVERY_URL');
+  const secret = Deno.env.get('PUSH_DELIVERY_SECRET');
+  if (!url || !secret) return { delivered: 0, failed: true };
+  try {
+    const response = await fetch(url, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-kpyx-push-secret': secret },
+      body: JSON.stringify({ user_ids: userIds, title, body }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(`Push endpoint returned ${response.status}`);
+    return { delivered: Number(result.delivered) || 0, failed: Number(result.failed) > 0 };
+  } catch (error) {
+    console.error('Push batch failed:', error instanceof Error ? error.message : 'unknown error');
+    return { delivered: 0, failed: true };
+  }
+}
+
 async function notifyOne(userId: string, title: string, body: string) {
   const { error } = await supabase.from('notifications').insert({ user_id: userId, title: title.slice(0, 80), body: body.slice(0, MAX_TEXT), kind: 'account' });
   if (error) throw error;
+  return sendPush([userId], title, body);
 }
 
 async function broadcast(body: string) {
-  let offset = 0, total = 0;
+  let offset = 0, total = 0, pushDelivered = 0, pushFailed = false;
   for (;;) {
     const { data: users, error } = await supabase.from('profiles').select('id').order('id').range(offset, offset + 499);
     if (error) throw error;
@@ -41,12 +60,15 @@ async function broadcast(body: string) {
       const { error: insertError } = await supabase.from('notifications').insert(rows);
       if (insertError) throw insertError;
       total += rows.length;
+      const push = await sendPush(rows.map(({ user_id }) => user_id), 'Annonce KPYX', body);
+      pushDelivered += push.delivered;
+      pushFailed ||= push.failed;
     }
     if (users.length < 500) break;
     offset += 500;
     if (offset >= 50000) throw new Error('Broadcast recipient safety limit reached');
   }
-  return total;
+  return { total, pushDelivered, pushFailed };
 }
 
 Deno.serve(async (req: Request) => {
@@ -61,7 +83,9 @@ Deno.serve(async (req: Request) => {
   try { update = await req.json(); } catch { return Response.json({ error: 'Invalid JSON' }, { status: 400 }); }
   const message = update?.message;
   const chatId = message?.chat?.id;
-  if (!message || String(chatId) !== adminId || String(message.from?.id) !== adminId) return Response.json({ ok: true });
+  // Authorize by the sender, not the destination chat: in a group, chat.id is
+  // the group ID while from.id remains the configured administrator ID.
+  if (!message || String(message.from?.id) !== adminId) return Response.json({ ok: true });
 
   try {
     if (Number.isSafeInteger(update.update_id)) {
@@ -96,11 +120,17 @@ Deno.serve(async (req: Request) => {
         const { data: user, error } = await supabase.from('profiles').select('id').eq('id', match[1]).maybeSingle();
         if (error) throw error;
         if (!user) await reply(botToken, chatId, 'Utilisateur introuvable. Utilise son UUID de profil.');
-        else { await notifyOne(user.id, 'Message de KPYX', match[2].trim()); await reply(botToken, chatId, 'Notification envoyée dans le site.'); }
+        else {
+          const push = await notifyOne(user.id, 'Message de KPYX', match[2].trim());
+          await reply(botToken, chatId, push.failed ? 'Notification ajoutée à la boîte KPYX ; la livraison Push serveur a échoué.' : `Notification enregistrée. Push envoyé à ${push.delivered} appareil(s).`);
+        }
       }
     } else if (command === '/all' || command === '/broadcast') {
       if (!rest || rest.length > MAX_TEXT) await reply(botToken, chatId, 'Format : /all <message> (900 caractères maximum).' );
-      else { const count = await broadcast(rest); await reply(botToken, chatId, `Notification envoyée à ${count} compte(s).`); }
+      else {
+        const result = await broadcast(rest);
+        await reply(botToken, chatId, `Notification enregistrée pour ${result.total} compte(s). Push envoyé à ${result.pushDelivered} appareil(s).${result.pushFailed ? '\nCertains envois Push ont échoué ; la notification reste dans la boîte KPYX.' : ''}`);
+      }
     } else {
       await reply(botToken, chatId, 'Commande inconnue. Envoie /help pour voir les commandes.');
     }
