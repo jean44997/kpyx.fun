@@ -23,12 +23,14 @@ export default async function handler(req, res) {
     const event = JSON.parse(body.toString('utf8'));
     if (!process.env.JEKO_STORE_ID || event?.storeId !== process.env.JEKO_STORE_ID) return json(res, 401, { error: 'Magasin Jèko invalide.' });
     const reference = event?.transactionDetails?.reference;
-    if (!reference || !event?.transactionDetails?.id || event?.transactionType !== 'payment') return json(res, 200, { received: true, ignored: true });
+    if (!reference || event?.transactionType !== 'payment') return json(res, 200, { received: true, ignored: true });
     const status = event.status === 'success' ? 'confirmed' : event.status === 'error' ? 'failed' : 'pending';
     if (status === 'pending') return json(res, 200, { received: true });
-    const amount = Number(event?.amount?.amount);
-    if (!Number.isSafeInteger(amount) || amount <= 0 || event?.amount?.currency !== 'XOF') return json(res, 400, { error: 'Montant invalide.' });
-    await rpc('kpyx_apply_jeko_topup', { p_reference: reference, p_transaction_id: String(event.transactionDetails.id), p_status: status, p_amount_xof: amount });
+    // Jèko's amountCents and MoneyModel.amount fields are in 1/100 XOF.
+    const amountCents = Number(event?.amount?.amount);
+    if (!Number.isSafeInteger(amountCents) || amountCents <= 0 || amountCents % 100 !== 0 || event?.amount?.currency !== 'XOF') return json(res, 400, { error: 'Montant invalide.' });
+    const amountXof = amountCents / 100;
+    await rpc('kpyx_apply_jeko_topup', { p_reference: reference, p_transaction_id: String(event.id || event.transactionDetails?.id), p_status: status, p_amount_xof: amountXof });
     return json(res, 200, { received: true });
   } catch (error) {
     console.error('Jeko webhook failed:', error.message);

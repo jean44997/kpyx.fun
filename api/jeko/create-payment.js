@@ -24,13 +24,13 @@ export default async function handler(req, res) {
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify({ user_id: user.id, provider: 'jeko', provider_event_id: reference, event_type: 'topup', amount_xof: amount, status: 'pending', metadata: { payment_method: method } }),
     });
-    const origin = `https://${req.headers.host}`;
+    const origin = String(process.env.APP_URL || 'https://kpyx.fun').replace(/\/$/, '');
     const jekoResponse = await fetch('https://api.jeko.africa/partner_api/payment_requests', {
       method: 'POST',
       headers: { 'X-API-KEY': key, 'X-API-KEY-ID': keyId, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         storeId, amountCents: amount * 100, currency: 'XOF', reference,
-        paymentDetails: { type: 'redirect', data: { paymentMethod: method, successUrl: `${origin}/recharge?status=pending`, errorUrl: `${origin}/recharge?status=failed` } },
+        paymentDetails: { type: 'redirect', data: { paymentMethod: method, successUrl: `${origin}/recharge?status=pending&reference=${encodeURIComponent(reference)}`, errorUrl: `${origin}/recharge?status=failed&reference=${encodeURIComponent(reference)}` } },
       }),
     });
     const result = await jekoResponse.json().catch(() => ({}));

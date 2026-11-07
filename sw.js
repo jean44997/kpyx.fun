@@ -1,5 +1,5 @@
-const CACHE='kpyx-shell-v14-push';
-const CORE=['/','/index.html','/support-assistant.js?v=support-push-20261106','/app.js?v=pwa-20261106-push','/style.css?v=pwa-20261105-notifications','/manifest.webmanifest','/assets/kpyx-favicon.svg','/assets/kpyx-180.png','/assets/kpyx-192.png','/assets/kpyx-512.png','/assets/whatsapp.svg','/assets/telegram.svg'];
+const CACHE='kpyx-shell-v15-network-payments';
+const CORE=['/','/index.html','/support-assistant.js?v=support-push-20261106','/app.js?v=network-payments-20261107','/style.css?v=pwa-20261105-notifications','/manifest.webmanifest','/assets/kpyx-favicon.svg','/assets/kpyx-180.png','/assets/kpyx-192.png','/assets/kpyx-512.png','/assets/whatsapp.svg','/assets/telegram.svg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
