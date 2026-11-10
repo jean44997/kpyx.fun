@@ -59,7 +59,7 @@ export default async function handler(req, res) {
       return json(res, 200, { status: 'failed' });
     }
 
-    const retryAfter = Math.max(5, Math.min(3600, Number(response.headers.get('retry-after')) || 60));
+    const retryAfter = Math.max(5, Math.min(3600, Number(response.headers.get('retry-after')) || 5));
     return json(res, 200, { status: 'pending', retryAfter });
   } catch (error) {
     console.error('Jeko payment status check failed:', error.message);
