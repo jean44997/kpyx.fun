@@ -238,3 +238,5 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ar
 .subscription-list .big-empty img{width:54px;height:54px;object-fit:contain;opacity:.78}
 
 .vip-legacy-terms{display:grid;gap:4px;margin:12px 0;padding:12px 14px;border:1px solid #ead7b8;border-left:3px solid #c28b44;border-radius:13px;background:linear-gradient(135deg,#fffaf0,#fff);color:#655238}.vip-legacy-terms strong{font-size:12px;color:#46371f}.vip-legacy-terms span{font-size:11px;line-height:1.45;color:#746854}
+
+.vip-advance-offer{display:grid;gap:8px;margin:13px 0;padding:13px;border:1px solid #ead4ad;border-radius:15px;background:linear-gradient(135deg,#fff9ed,#fff)}.vip-advance-offer strong{font-size:13px;color:#654316}.vip-advance-offer span{font-size:11px;line-height:1.5;color:#76664d}.vip-advance-offer .button{justify-self:start}.vip-advance-paid{margin:11px 0;padding:10px 12px;border-left:3px solid #4c8b67;border-radius:0 11px 11px 0;background:#edf5ee;color:#366148;font-size:11px;line-height:1.45}
