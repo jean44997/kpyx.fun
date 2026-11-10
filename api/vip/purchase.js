@@ -1,6 +1,6 @@
 import { json, methodNotAllowed, requireUser, rpc } from '../_lib.js';
 
-const OPEN_VIP_PLANS = new Set(['VIP1', 'VIP2', 'VIP3', 'VIP4']);
+const OPEN_VIP_PLANS = new Set(['VIP1', 'VIP2', 'VIP3', 'VIP4', 'VIP5', 'VIP6', 'VIP7', 'VIP8']);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return methodNotAllowed(req, res);
@@ -20,7 +20,18 @@ export default async function handler(req, res) {
       return json(res, 500, { error: 'La souscription n’a pas pu être finalisée. Votre solde n’a pas été débité.' });
     }
 
-    return json(res, 200, { ok: true, planId: result.plan_id, balanceXof: result.balance_xof, subscriptionId: result.subscription_id });
+    return json(res, 200, {
+      ok: true,
+      planId: result.plan_id,
+      balanceXof: result.balance_xof,
+      subscriptionId: result.subscription_id,
+      priceXof: result.price_xof,
+      dailyCreditXof: result.daily_credit_xof,
+      totalCreditXof: result.total_credit_xof,
+      durationDays: result.duration_days,
+      startsAt: result.starts_at,
+      endsAt: result.ends_at,
+    });
   } catch (error) {
     console.error('VIP purchase failed:', error.message);
     return json(res, 500, { error: 'La souscription n’a pas pu être finalisée. Réessayez.' });
