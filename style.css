@@ -218,4 +218,21 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ar
 .mobile-link{position:relative}.mobile-link .notification-bubble{top:1px;right:calc(50% - 18px);border-color:#fffefa}.notification-nav{position:relative}.notification-nav .notification-bubble{top:6px;right:7px}
 
 .vip-progress-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 7px;color:#77736b;font-size:12px}.vip-progress-summary strong{color:#24211d;font-size:12px}.vip-progress-track{height:9px;overflow:hidden;border-radius:999px;background:#e9e5dc;box-shadow:inset 0 1px 2px #33291c12}.vip-progress-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#4b8f67,#b0c879);transition:width .5s ease}.subscription-card{margin-bottom:12px}.subscription-card .sub{margin:8px 0 0;font-size:11px;line-height:1.5;color:#77736b}@media(max-width:560px){.vip-progress-summary{align-items:flex-start;flex-direction:column;gap:4px}.vip-progress-summary strong{font-size:13px}}
-
+/* Clear member wallet actions and correctly sized card/key artwork. */
+.member-balance .balance-actions .button.primary,
+.account-actions .account-recharge{
+  color:#fff!important;
+  background:#e8562a!important;
+  background-image:linear-gradient(135deg,#f16a3d,#d94724)!important;
+  border:1px solid #d94724!important;
+  box-shadow:0 5px 13px rgba(216,71,36,.2);
+}
+.member-balance .balance-actions .button.primary:hover,
+.account-actions .account-recharge:hover{background-image:linear-gradient(135deg,#f57649,#ce3e1d)!important}
+.member-chip-card{background-color:#d8bb6e!important;background-image:linear-gradient(140deg,#c5a24c 0%,#f5e5a9 48%,#b38a36 100%)!important;border:1px solid #9c7934;isolation:isolate;filter:none}
+.member-chip-card svg{z-index:1;width:19px;height:16px;filter:none}
+.member-chip-card svg rect{fill:#ecd68f!important;stroke:#765a27!important;stroke-width:1!important}
+.member-chip-card svg path{fill:none!important;stroke:#765a27!important;stroke-width:1!important;stroke-linejoin:round}
+.app-page-bar .owned-plans{display:inline-flex;align-items:center;gap:5px;line-height:1}
+.app-page-bar .owned-plans svg{display:block;width:14px!important;height:14px!important;min-width:14px;max-width:14px;flex:none}
+.subscription-list .big-empty img{width:54px;height:54px;object-fit:contain;opacity:.78}
